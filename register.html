@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';">
+    <title>Inscription - Mireb Commercial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .password-strength {
+            height: 5px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-blue-600">Mireb Commercial</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Registration Form -->
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Créer un compte</h2>
+                <p class="mt-2 text-gray-600">Rejoignez notre plateforme sécurisée</p>
+            </div>
+            
+            <form class="space-y-6" action="/api/auth/register" method="POST" id="registerForm">
+                <!-- CSRF Token -->
+                <input type="hidden" name="_csrf" id="csrfToken">
+
+                <!-- Name Fields -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">Prénom</label>
+                        <input type="text" id="firstName" name="firstName" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                            focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Nom</label>
+                        <input type="text" id="lastName" name="lastName" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                            focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Adresse email</label>
+                    <input type="email" id="email" name="email" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                        focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <p id="emailError" class="mt-1 text-sm text-red-600 hidden">
+                        Cette adresse email est déjà utilisée
+                    </p>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                    <div class="mt-1 relative">
+                        <input type="password" id="password" name="password" required
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                            focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <button type="button" id="togglePassword" 
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <!-- Password Strength Indicator -->
+                    <div class="mt-2">
+                        <div class="w-full bg-gray-200 rounded-full">
+                            <div id="passwordStrength" class="password-strength bg-red-500 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p id="passwordFeedback" class="mt-1 text-sm text-gray-500">
+                            Le mot de passe doit contenir au moins 8 caractères
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+                        Confirmer le mot de passe
+                    </label>
+                    <div class="mt-1 relative">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                            focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <p id="passwordMatchError" class="mt-1 text-sm text-red-600 hidden">
+                        Les mots de passe ne correspondent pas
+                    </p>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                        <input id="terms" name="terms" type="checkbox" required
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="terms" class="font-medium text-gray-700">
+                            J'accepte les 
+                            <a href="terms.html" class="text-blue-600 hover:text-blue-500">conditions d'utilisation</a>
+                            et la 
+                            <a href="privacy.html" class="text-blue-600 hover:text-blue-500">politique de confidentialité</a>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" 
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm 
+                        font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 
+                        focus:ring-offset-2 focus:ring-blue-500">
+                        Créer un compte
+                    </button>
+                </div>
+            </form>
+
+            <!-- Social Sign Up -->
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Ou inscrivez-vous avec</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-2 gap-3">
+                    <button type="button" 
+                        class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md 
+                        shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fab fa-google text-red-500 mr-2"></i>
+                        Google
+                    </button>
+                    <button type="button" 
+                        class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md 
+                        shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fab fa-facebook text-blue-600 mr-2"></i>
+                        Facebook
+                    </button>
+                </div>
+            </div>
+
+            <p class="mt-8 text-center text-sm text-gray-600">
+                Déjà inscrit? 
+                <a href="login.html" class="font-medium text-blue-600 hover:text-blue-500">
+                    Se connecter
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate CSRF token
+            const csrfToken = generateCSRFToken();
+            document.getElementById('csrfToken').value = csrfToken;
+
+            // Password visibility toggle
+            const togglePassword = document.getElementById('togglePassword');
+            const password = document.getElementById('password');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            // Password strength checker
+            const passwordInput = document.getElementById('password');
+            const strengthIndicator = document.getElementById('passwordStrength');
+            const feedback = document.getElementById('passwordFeedback');
+
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                const strength = checkPasswordStrength(password);
+                
+                // Update strength indicator
+                strengthIndicator.style.width = strength.score * 25 + '%';
+                strengthIndicator.className = 'password-strength rounded-full ' + strength.class;
+                feedback.textContent = strength.feedback;
+            });
+
+            // Password match validation
+            const confirmPassword = document.getElementById('confirmPassword');
+            const passwordMatchError = document.getElementById('passwordMatchError');
+
+            confirmPassword.addEventListener('input', function() {
+                if (this.value !== password.value) {
+                    passwordMatchError.classList.remove('hidden');
+                } else {
+                    passwordMatchError.classList.add('hidden');
+                }
+            });
+
+            // Form submission
+            document.getElementById('registerForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                if (!validateForm()) {
+                    return;
+                }
+
+                try {
+                    const formData = new FormData(this);
+                    const response = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-Token': csrfToken,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                        credentials: 'same-origin'
+                    });
+
+                    if (response.ok) {
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        const data = await response.json();
+                        handleRegistrationError(data.error);
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    alert('Erreur lors de l\'inscription. Veuillez réessayer.');
+                }
+            });
+        });
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let score = 0;
+            let feedback = [];
+
+            // Length check
+            if (password.length < 8) {
+                feedback.push('Le mot de passe doit contenir au moins 8 caractères');
+            } else {
+                score++;
+            }
+
+            // Uppercase check
+            if (!/[A-Z]/.test(password)) {
+                feedback.push('Ajoutez une lettre majuscule');
+            } else {
+                score++;
+            }
+
+            // Number check
+            if (!/\d/.test(password)) {
+                feedback.push('Ajoutez un chiffre');
+            } else {
+                score++;
+            }
+
+            // Special character check
+            if (!/[!@#$%^&*]/.test(password)) {
+                feedback.push('Ajoutez un caractère spécial');
+            } else {
+                score++;
+            }
+
+            let strengthClass;
+            switch(score) {
+                case 0:
+                case 1:
+                    strengthClass = 'bg-red-500';
+                    break;
+                case 2:
+                    strengthClass = 'bg-yellow-500';
+                    break;
+                case 3:
+                    strengthClass = 'bg-blue-500';
+                    break;
+                case 4:
+                    strengthClass = 'bg-green-500';
+                    break;
+            }
+
+            return {
+                score: score,
+                class: strengthClass,
+                feedback: feedback.length > 0 ? feedback[0] : 'Mot de passe fort'
+            };
+        }
+
+        // Form validation
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+
+            if (password !== confirmPassword) {
+                alert('Les mots de passe ne correspondent pas');
+                return false;
+            }
+
+            if (!terms) {
+                alert('Veuillez accepter les conditions d\'utilisation');
+                return false;
+            }
+
+            if (checkPasswordStrength(password).score < 3) {
+                alert('Veuillez choisir un mot de passe plus fort');
+                return false;
+            }
+
+            return true;
+        }
+
+        // CSRF Token generation
+        function generateCSRFToken() {
+            return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+                .map(byte => byte.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // Error handling
+        function handleRegistrationError(error) {
+            const emailError = document.getElementById('emailError');
+            
+            if (error === 'EMAIL_EXISTS') {
+                emailError.classList.remove('hidden');
+            } else {
+                alert('Une erreur est survenue. Veuillez réessayer.');
+            }
+        }
+    </script>
+</body>
+</html>

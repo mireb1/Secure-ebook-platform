@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';">
+    <title>Explorer - Mireb Commercial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .book-card:hover .book-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-blue-600">Mireb Commercial</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="search" placeholder="Rechercher un livre..." 
+                            class="w-64 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="absolute right-3 top-2.5 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <a href="login.html" class="text-gray-700 hover:text-blue-600">Connexion</a>
+                    <a href="register.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        Inscription
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Categories Bar -->
+    <div class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex space-x-6 py-4 overflow-x-auto">
+                <button class="text-blue-600 font-medium whitespace-nowrap">Tous les livres</button>
+                <button class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Romans</button>
+                <button class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Science-Fiction</button>
+                <button class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Policier</button>
+                <button class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Biographies</button>
+                <button class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Histoire</button>
+                <button class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Sciences</button>
+                <button class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Développement personnel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Featured Books -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Livres en vedette</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Book Card 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
+                            class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
+                            flex items-center justify-center book-overlay">
+                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
+                                Aperçu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Le Grand Secret</h3>
+                        <p class="text-gray-600 text-sm mb-2">Par Jean Dupont</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-600 font-semibold">19.99€</span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-600">4.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
+                            class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
+                            flex items-center justify-center book-overlay">
+                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
+                                Aperçu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">L'Énigme du Temps</h3>
+                        <p class="text-gray-600 text-sm mb-2">Par Marie Martin</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-600 font-semibold">24.99€</span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-600">4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
+                            class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
+                            flex items-center justify-center book-overlay">
+                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
+                                Aperçu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Les Secrets de Paris</h3>
+                        <p class="text-gray-600 text-sm mb-2">Par Sophie Bernard</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-600 font-semibold">21.99€</span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-600">4.6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Card 4 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
+                            class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
+                            flex items-center justify-center book-overlay">
+                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
+                                Aperçu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Le Code Secret</h3>
+                        <p class="text-gray-600 text-sm mb-2">Par Pierre Dubois</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-600 font-semibold">18.99€</span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-600">4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Releases -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Nouveautés</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Similar book cards structure as above -->
+            </div>
+        </section>
+
+        <!-- Popular Authors -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Auteurs Populaires</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow p-4 flex items-center space-x-4">
+                    <img src="https://via.placeholder.com/100" alt="Author" class="w-16 h-16 rounded-full">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Victor Hugo</h3>
+                        <p class="text-gray-600 text-sm">15 livres</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4 flex items-center space-x-4">
+                    <img src="https://via.placeholder.com/100" alt="Author" class="w-16 h-16 rounded-full">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Émile Zola</h3>
+                        <p class="text-gray-600 text-sm">12 livres</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4 flex items-center space-x-4">
+                    <img src="https://via.placeholder.com/100" alt="Author" class="w-16 h-16 rounded-full">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Albert Camus</h3>
+                        <p class="text-gray-600 text-sm">8 livres</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4 flex items-center space-x-4">
+                    <img src="https://via.placeholder.com/100" alt="Author" class="w-16 h-16 rounded-full">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Simone de Beauvoir</h3>
+                        <p class="text-gray-600 text-sm">10 livres</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">À propos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Notre histoire</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">L'équipe</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Carrières</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Centre d'aide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Légal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Confidentialité</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Conditions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cookies</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-gray-400">&copy; 2024 Mireb Commercial. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Search functionality
+        const searchInput = document.querySelector('input[type="search"]');
+        searchInput.addEventListener('input', function(e) {
+            // Implement search functionality here
+            console.log('Searching for:', e.target.value);
+        });
+
+        // Category filtering
+        const categoryButtons = document.querySelectorAll('.max-w-7xl .flex.space-x-6 button');
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                categoryButtons.forEach(btn => {
+                    btn.classList.remove('text-blue-600');
+                    btn.classList.add('text-gray-600');
+                });
+                
+                // Add active class to clicked button
+                this.classList.remove('text-gray-600');
+                this.classList.add('text-blue-600');
+                
+                // Implement category filtering here
+                console.log('Selected category:', this.textContent);
+            });
+        });
+
+        // Preview buttons
+        const previewButtons = document.querySelectorAll('.book-overlay button');
+        previewButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Implement preview functionality here
+                console.log('Preview clicked for:', this.closest('.book-card').querySelector('h3').textContent);
+            });
+        });
+    </script>
+</body>
+</html>
