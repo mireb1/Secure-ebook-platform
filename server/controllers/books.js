@@ -306,6 +306,119 @@ exports.addReview = async (req, res) => {
     }
 };
 
+// @desc    Update reading progress
+// @route   POST /api/books/:id/progress
+// @access  Private
+exports.updateProgress = async (req, res) => {
+    try {
+        const { progress } = req.body;
+
+        // Validate progress
+        if (progress < 0 || progress > 100) {
+            return res.status(400).json({
+                error: 'Le progrès doit être entre 0 et 100'
+            });
+        }
+
+        // Find user's book in library
+        const user = await User.findById(req.user.id);
+        const userBook = user.library.find(item => 
+            item.book.toString() === req.params.id
+        );
+
+        if (!userBook) {
+            return res.status(404).json({
+                error: 'Livre non trouvé dans votre bibliothèque'
+            });
+        }
+
+        // Update progress
+        userBook.progress = progress;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Progrès mis à jour avec succès'
+        });
+    } catch (err) {
+        console.error('Update progress error:', err);
+        res.status(500).json({
+            error: 'Erreur lors de la mise à jour du progrès'
+        });
+    }
+};
+
+// @desc    Save bookmarks
+// @route   POST /api/books/:id/bookmarks
+// @access  Private
+exports.saveBookmarks = async (req, res) => {
+    try {
+        const { bookmarks } = req.body;
+
+        // Validate bookmarks array
+        if (!Array.isArray(bookmarks)) {
+            return res.status(400).json({
+                error: 'Format de marque-pages invalide'
+            });
+        }
+
+        // Find user's book in library
+        const user = await User.findById(req.user.id);
+        const userBook = user.library.find(item => 
+            item.book.toString() === req.params.id
+        );
+
+        if (!userBook) {
+            return res.status(404).json({
+                error: 'Livre non trouvé dans votre bibliothèque'
+            });
+        }
+
+        // Update bookmarks
+        userBook.bookmarks = bookmarks;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Marque-pages sauvegardés avec succès'
+        });
+    } catch (err) {
+        console.error('Save bookmarks error:', err);
+        res.status(500).json({
+            error: 'Erreur lors de la sauvegarde des marque-pages'
+        });
+    }
+};
+
+// @desc    Get bookmarks
+// @route   GET /api/books/:id/bookmarks
+// @access  Private
+exports.getBookmarks = async (req, res) => {
+    try {
+        // Find user's book in library
+        const user = await User.findById(req.user.id);
+        const userBook = user.library.find(item => 
+            item.book.toString() === req.params.id
+        );
+
+        if (!userBook) {
+            return res.status(404).json({
+                error: 'Livre non trouvé dans votre bibliothèque'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            bookmarks: userBook.bookmarks || []
+        });
+    } catch (err) {
+        console.error('Get bookmarks error:', err);
+        res.status(500).json({
+            error: 'Erreur lors de la récupération des marque-pages'
+        });
+    }
+};
+
 // @desc    Get book reviews
 // @route   GET /api/books/:id/reviews
 // @access  Private

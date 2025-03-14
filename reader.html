@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';">
+    <title>Lecteur - Mireb Commercial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .reader-content {
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        @media (prefers-color-scheme: dark) {
+            .dark-mode {
+                background-color: #1a1a1a;
+                color: #e5e5e5;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1 class="text-xl font-semibold text-gray-800" id="bookTitle">Chargement...</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleTheme()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button onclick="decreaseFontSize()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button onclick="increaseFontSize()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="relative group">
+                        <button class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl hidden group-hover:block">
+                            <div class="p-2">
+                                <button onclick="addBookmark()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                                    Ajouter un marque-page
+                                </button>
+                                <div class="border-t my-2"></div>
+                                <div id="bookmarksList" class="max-h-48 overflow-y-auto">
+                                    <!-- Bookmarks will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="fixed top-16 left-0 right-0 h-1 bg-gray-200">
+        <div id="progressBar" class="h-full bg-blue-600 transition-all duration-300" style="width: 0%"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-24">
+        <div class="max-w-3xl mx-auto px-4">
+            <div id="readerContent" class="reader-content">
+                <!-- Book content will be loaded here -->
+                <div class="text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-blue-600 text-2xl"></i>
+                    <p class="mt-2 text-gray-600">Chargement du livre...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t">
+        <div class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+            <button onclick="previousPage()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="text-center">
+                <span id="currentPage">Page 0</span>
+                <span class="mx-2">/</span>
+                <span id="totalPages">0</span>
+            </div>
+            <button onclick="nextPage()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentBook = null;
+        let currentPage = 1;
+        let totalPages = 1;
+        let fontSize = 18;
+        let bookmarks = [];
+        let darkMode = false;
+
+        // Initialize reader
+        async function initReader() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookId = urlParams.get('id');
+                
+                if (!bookId) {
+                    throw new Error('ID du livre manquant');
+                }
+
+                // Get book details and content
+                const response = await fetch(`/api/books/${bookId}/download`, {
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement du livre');
+                }
+
+                const { data } = await response.json();
+                currentBook = data;
+
+                // Decrypt content
+                const decryptedContent = await decryptContent(
+                    data.content,
+                    data.iv,
+                    data.authTag
+                );
+
+                // Load content based on format
+                switch (data.format) {
+                    case 'PDF':
+                        await loadPDF(decryptedContent);
+                        break;
+                    case 'EPUB':
+                        await loadEPUB(decryptedContent);
+                        break;
+                    default:
+                        document.getElementById('readerContent').innerHTML = decryptedContent;
+                }
+
+                // Update UI
+                document.getElementById('bookTitle').textContent = currentBook.title;
+                updateProgress();
+                loadBookmarks();
+            } catch (error) {
+                console.error('Reader initialization error:', error);
+                document.getElementById('readerContent').innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
+                        <p class="mt-2 text-gray-600">Erreur lors du chargement du livre</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Decrypt content
+        async function decryptContent(encryptedContent, iv, authTag) {
+            // Implementation will depend on the encryption method used
+            // This is a placeholder
+            return encryptedContent;
+        }
+
+        // Navigation
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                updateContent();
+                updateProgress();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateContent();
+                updateProgress();
+            }
+        }
+
+        // Update progress
+        function updateProgress() {
+            const progress = (currentPage / totalPages) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('currentPage').textContent = `Page ${currentPage}`;
+            document.getElementById('totalPages').textContent = totalPages;
+
+            // Save progress
+            saveProgress();
+        }
+
+        // Save reading progress
+        async function saveProgress() {
+            try {
+                await fetch(`/api/books/${currentBook._id}/progress`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        progress: (currentPage / totalPages) * 100
+                    })
+                });
+            } catch (error) {
+                console.error('Save progress error:', error);
+            }
+        }
+
+        // Bookmarks
+        function addBookmark() {
+            const bookmark = {
+                page: currentPage,
+                timestamp: Date.now()
+            };
+            bookmarks.push(bookmark);
+            updateBookmarksList();
+            saveBookmarks();
+        }
+
+        function updateBookmarksList() {
+            const container = document.getElementById('bookmarksList');
+            container.innerHTML = bookmarks.length ? 
+                bookmarks.map(bookmark => `
+                    <div class="flex items-center justify-between px-4 py-2 hover:bg-gray-100 rounded">
+                        <button onclick="goToPage(${bookmark.page})" class="text-sm text-gray-700">
+                            Page ${bookmark.page}
+                        </button>
+                        <button onclick="removeBookmark(${bookmark.timestamp})" class="text-red-600 hover:text-red-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('') :
+                '<p class="px-4 py-2 text-sm text-gray-500">Aucun marque-page</p>';
+        }
+
+        function removeBookmark(timestamp) {
+            bookmarks = bookmarks.filter(b => b.timestamp !== timestamp);
+            updateBookmarksList();
+            saveBookmarks();
+        }
+
+        // Save bookmarks
+        async function saveBookmarks() {
+            try {
+                await fetch(`/api/books/${currentBook._id}/bookmarks`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ bookmarks })
+                });
+            } catch (error) {
+                console.error('Save bookmarks error:', error);
+            }
+        }
+
+        // Load bookmarks
+        async function loadBookmarks() {
+            try {
+                const response = await fetch(`/api/books/${currentBook._id}/bookmarks`, {
+                    credentials: 'same-origin'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    bookmarks = data.bookmarks;
+                    updateBookmarksList();
+                }
+            } catch (error) {
+                console.error('Load bookmarks error:', error);
+            }
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('nav').classList.toggle('bg-gray-800');
+            document.querySelector('.fixed.bottom-0').classList.toggle('bg-gray-800');
+        }
+
+        // Font size controls
+        function increaseFontSize() {
+            fontSize = Math.min(fontSize + 2, 24);
+            document.getElementById('readerContent').style.fontSize = `${fontSize}px`;
+        }
+
+        function decreaseFontSize() {
+            fontSize = Math.max(fontSize - 2, 14);
+            document.getElementById('readerContent').style.fontSize = `${fontSize}px`;
+        }
+
+        // Go to specific page
+        function goToPage(page) {
+            currentPage = page;
+            updateContent();
+            updateProgress();
+        }
+
+        // Initialize reader when page loads
+        document.addEventListener('DOMContentLoaded', initReader);
+
+        // Handle keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                previousPage();
+            } else if (e.key === 'ArrowRight') {
+                nextPage();
+            }
+        });
+    </script>
+</body>
+</html>

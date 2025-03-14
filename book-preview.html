@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';">
+    <title>Aperçu du livre - Mireb Commercial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .preview-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="previewModal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4">
+            <!-- Loading State -->
+            <div id="loadingState" class="p-8 text-center">
+                <i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i>
+                <p class="mt-4 text-gray-600">Chargement de l'aperçu...</p>
+            </div>
+
+            <!-- Content State -->
+            <div id="contentState" class="hidden">
+                <!-- Header -->
+                <div class="flex items-start justify-between p-6 border-b">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800" id="bookTitle"></h2>
+                        <p class="text-gray-600 mt-1" id="bookAuthor"></p>
+                    </div>
+                    <button onclick="closePreview()" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Book Details -->
+                <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Cover Image -->
+                    <div class="md:col-span-1">
+                        <img id="bookCover" src="" alt="Book Cover" 
+                            class="w-full rounded-lg shadow-lg">
+                        
+                        <!-- Price and Rating -->
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-2xl font-bold text-blue-600" id="bookPrice"></span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-600" id="bookRating"></span>
+                            </div>
+                        </div>
+
+                        <!-- Purchase Button -->
+                        <button onclick="purchaseBook()" 
+                            class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 
+                            flex items-center justify-center">
+                            <i class="fas fa-shopping-cart mr-2"></i>
+                            Acheter
+                        </button>
+
+                        <!-- Book Details List -->
+                        <div class="mt-6 space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Format:</span>
+                                <span class="text-gray-800" id="bookFormat"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Langue:</span>
+                                <span class="text-gray-800" id="bookLanguage"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Date de publication:</span>
+                                <span class="text-gray-800" id="bookPublished"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">ISBN:</span>
+                                <span class="text-gray-800" id="bookISBN"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book Info -->
+                    <div class="md:col-span-2">
+                        <!-- Categories -->
+                        <div class="flex flex-wrap gap-2 mb-4" id="bookCategories">
+                            <!-- Categories will be added here -->
+                        </div>
+
+                        <!-- Description -->
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Description</h3>
+                        <div class="preview-container prose prose-sm text-gray-600" id="bookDescription"></div>
+
+                        <!-- Author Info -->
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">À propos de l'auteur</h3>
+                            <div class="flex items-center space-x-4">
+                                <img id="authorPhoto" src="" alt="Author" 
+                                    class="w-16 h-16 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800" id="authorName"></h4>
+                                    <p class="text-gray-600 text-sm mt-1" id="authorBio"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reviews Summary -->
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Avis des lecteurs</h3>
+                            <div class="grid grid-cols-2 gap-4" id="reviewsContainer">
+                                <!-- Reviews will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="hidden p-8 text-center">
+                <i class="fas fa-exclamation-circle text-4xl text-red-600"></i>
+                <p class="mt-4 text-gray-600" id="errorMessage">Une erreur est survenue</p>
+                <button onclick="closePreview()" 
+                    class="mt-4 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentBookId = null;
+
+        // Show loading state
+        function showLoading() {
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('contentState').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+        }
+
+        // Show error state
+        function showError(message) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('contentState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = message;
+        }
+
+        // Show content state
+        function showContent() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('contentState').classList.remove('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+        }
+
+        // Load book preview
+        async function loadBookPreview(bookId) {
+            showLoading();
+            currentBookId = bookId;
+
+            try {
+                const response = await fetch(`/api/books/${bookId}`, {
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement du livre');
+                }
+
+                const { data: book } = await response.json();
+
+                // Update book details
+                document.getElementById('bookTitle').textContent = book.title;
+                document.getElementById('bookAuthor').textContent = `par ${book.author.name}`;
+                document.getElementById('bookCover').src = book.coverImage;
+                document.getElementById('bookPrice').textContent = 
+                    `${book.price.amount}${book.price.currency === 'EUR' ? '€' : book.price.currency}`;
+                document.getElementById('bookRating').textContent = book.rating.average.toFixed(1);
+                document.getElementById('bookFormat').textContent = book.format;
+                document.getElementById('bookLanguage').textContent = 
+                    book.language === 'fr' ? 'Français' : book.language;
+                document.getElementById('bookPublished').textContent = 
+                    new Date(book.publishedDate).toLocaleDateString();
+                document.getElementById('bookISBN').textContent = book.isbn;
+                document.getElementById('bookDescription').textContent = book.description;
+                document.getElementById('authorName').textContent = book.author.name;
+                document.getElementById('authorBio').textContent = book.author.biography;
+                document.getElementById('authorPhoto').src = book.author.photo || 'https://via.placeholder.com/64';
+
+                // Update categories
+                const categoriesContainer = document.getElementById('bookCategories');
+                categoriesContainer.innerHTML = book.category.map(cat => `
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                        ${cat}
+                    </span>
+                `).join('');
+
+                // Update reviews
+                const reviewsContainer = document.getElementById('reviewsContainer');
+                reviewsContainer.innerHTML = book.reviews.slice(0, 4).map(review => `
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex items-center mb-2">
+                            <div class="flex-1">
+                                <h4 class="font-medium text-gray-800">
+                                    ${review.user.firstName} ${review.user.lastName}
+                                </h4>
+                                <p class="text-gray-500 text-sm">
+                                    ${new Date(review.createdAt).toLocaleDateString()}
+                                </p>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-600">${review.rating}</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm">${review.comment}</p>
+                    </div>
+                `).join('');
+
+                showContent();
+            } catch (error) {
+                console.error('Preview error:', error);
+                showError('Erreur lors du chargement de l\'aperçu');
+            }
+        }
+
+        // Purchase book
+        async function purchaseBook() {
+            if (!currentBookId) return;
+
+            try {
+                const response = await fetch(`/api/books/${currentBookId}/purchase`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Erreur lors de l\'achat');
+                }
+
+                // Redirect to dashboard or show success message
+                window.location.href = '/dashboard.html';
+            } catch (error) {
+                console.error('Purchase error:', error);
+                alert(error.message);
+            }
+        }
+
+        // Close preview
+        function closePreview() {
+            window.parent.postMessage({ type: 'closePreview' }, '*');
+        }
+
+        // Listen for messages from parent window
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'loadPreview') {
+                loadBookPreview(event.data.bookId);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -79,7 +79,17 @@ const userSchema = new mongoose.Schema({
         },
         purchaseDate: Date,
         lastAccessed: Date,
-        progress: Number
+        progress: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 100
+        },
+        bookmarks: [{
+            page: Number,
+            timestamp: Date,
+            note: String
+        }]
     }],
     activityLog: [{
         action: String,

@@ -63,105 +63,11 @@
         <!-- Featured Books -->
         <section class="mb-12">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Livres en vedette</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Book Card 1 -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
-                    <div class="relative">
-                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
-                            class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
-                            flex items-center justify-center book-overlay">
-                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
-                                Aperçu
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Le Grand Secret</h3>
-                        <p class="text-gray-600 text-sm mb-2">Par Jean Dupont</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-blue-600 font-semibold">19.99€</span>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="ml-1 text-gray-600">4.5</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book Card 2 -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
-                    <div class="relative">
-                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
-                            class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
-                            flex items-center justify-center book-overlay">
-                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
-                                Aperçu
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">L'Énigme du Temps</h3>
-                        <p class="text-gray-600 text-sm mb-2">Par Marie Martin</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-blue-600 font-semibold">24.99€</span>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="ml-1 text-gray-600">4.8</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book Card 3 -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
-                    <div class="relative">
-                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
-                            class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
-                            flex items-center justify-center book-overlay">
-                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
-                                Aperçu
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Les Secrets de Paris</h3>
-                        <p class="text-gray-600 text-sm mb-2">Par Sophie Bernard</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-blue-600 font-semibold">21.99€</span>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="ml-1 text-gray-600">4.6</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book Card 4 -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
-                    <div class="relative">
-                        <img src="https://via.placeholder.com/300x400" alt="Book Cover" 
-                            class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
-                            flex items-center justify-center book-overlay">
-                            <button class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
-                                Aperçu
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Le Code Secret</h3>
-                        <p class="text-gray-600 text-sm mb-2">Par Pierre Dubois</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-blue-600 font-semibold">18.99€</span>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="ml-1 text-gray-600">4.7</span>
-                            </div>
-                        </div>
-                    </div>
+            <div id="featuredBooks" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Books will be loaded dynamically -->
+                <div class="col-span-full text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-blue-600 text-2xl"></i>
+                    <p class="mt-2 text-gray-600">Chargement des livres...</p>
                 </div>
             </div>
         </section>
@@ -169,8 +75,12 @@
         <!-- New Releases -->
         <section class="mb-12">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Nouveautés</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Similar book cards structure as above -->
+            <div id="newReleases" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Books will be loaded dynamically -->
+                <div class="col-span-full text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-blue-600 text-2xl"></i>
+                    <p class="mt-2 text-gray-600">Chargement des livres...</p>
+                </div>
             </div>
         </section>
 
@@ -262,41 +172,166 @@
         </div>
     </footer>
 
+    <!-- Preview Modal Container -->
+    <div id="previewContainer" class="fixed inset-0 z-50 hidden">
+        <iframe id="previewFrame" src="book-preview.html" class="w-full h-full border-0"></iframe>
+    </div>
+
     <script>
+        let currentCategory = 'all';
+        let searchTimeout;
+        const previewFrame = document.getElementById('previewFrame');
+        const previewContainer = document.getElementById('previewContainer');
+
+        // Load books from API
+        async function loadBooks(category = 'all', section = 'featured') {
+            try {
+                let url = '/api/books?';
+                const params = new URLSearchParams();
+                
+                if (category !== 'all') {
+                    params.append('category', category);
+                }
+                
+                if (section === 'new') {
+                    params.append('sort', 'publishedDate');
+                    params.append('limit', '4');
+                }
+
+                const response = await fetch(url + params.toString(), {
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des livres');
+                }
+
+                const { data } = await response.json();
+                return data.books;
+            } catch (error) {
+                console.error('Load books error:', error);
+                return [];
+            }
+        }
+
+        // Create book card HTML
+        function createBookCard(book) {
+            return `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden book-card">
+                    <div class="relative">
+                        <img src="${book.coverImage}" alt="${book.title}" 
+                            class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 
+                            flex items-center justify-center book-overlay">
+                            <button onclick="showPreview('${book._id}')" 
+                                class="bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100">
+                                Aperçu
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">${book.title}</h3>
+                        <p class="text-gray-600 text-sm mb-2">Par ${book.author.name}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-600 font-semibold">
+                                ${book.price.amount}${book.price.currency === 'EUR' ? '€' : book.price.currency}
+                            </span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-600">${book.rating.average.toFixed(1)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update book sections
+        async function updateBooks(category = currentCategory) {
+            currentCategory = category;
+            
+            // Update featured books
+            const featuredBooks = await loadBooks(category, 'featured');
+            document.getElementById('featuredBooks').innerHTML = featuredBooks.length ?
+                featuredBooks.map(createBookCard).join('') :
+                '<div class="col-span-full text-center py-8"><p class="text-gray-600">Aucun livre trouvé</p></div>';
+
+            // Update new releases
+            const newReleases = await loadBooks(category, 'new');
+            document.getElementById('newReleases').innerHTML = newReleases.length ?
+                newReleases.map(createBookCard).join('') :
+                '<div class="col-span-full text-center py-8"><p class="text-gray-600">Aucun livre trouvé</p></div>';
+        }
+
         // Search functionality
         const searchInput = document.querySelector('input[type="search"]');
         searchInput.addEventListener('input', function(e) {
-            // Implement search functionality here
-            console.log('Searching for:', e.target.value);
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(async () => {
+                const query = e.target.value.trim();
+                if (query) {
+                    try {
+                        const response = await fetch(`/api/books/search?q=${encodeURIComponent(query)}`, {
+                            credentials: 'same-origin'
+                        });
+                        
+                        if (!response.ok) throw new Error('Erreur de recherche');
+                        
+                        const { data: books } = await response.json();
+                        
+                        document.getElementById('featuredBooks').innerHTML = books.length ?
+                            books.map(createBookCard).join('') :
+                            '<div class="col-span-full text-center py-8"><p class="text-gray-600">Aucun livre trouvé</p></div>';
+                        
+                        // Hide new releases during search
+                        document.querySelector('section.mb-12').style.display = 'none';
+                    } catch (error) {
+                        console.error('Search error:', error);
+                    }
+                } else {
+                    // Show all sections and reset to default view
+                    document.querySelector('section.mb-12').style.display = 'block';
+                    updateBooks();
+                }
+            }, 300);
         });
 
         // Category filtering
         const categoryButtons = document.querySelectorAll('.max-w-7xl .flex.space-x-6 button');
         categoryButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // Remove active class from all buttons
                 categoryButtons.forEach(btn => {
                     btn.classList.remove('text-blue-600');
                     btn.classList.add('text-gray-600');
                 });
                 
-                // Add active class to clicked button
                 this.classList.remove('text-gray-600');
                 this.classList.add('text-blue-600');
                 
-                // Implement category filtering here
-                console.log('Selected category:', this.textContent);
+                const category = this.textContent === 'Tous les livres' ? 'all' : this.textContent;
+                updateBooks(category);
             });
         });
 
-        // Preview buttons
-        const previewButtons = document.querySelectorAll('.book-overlay button');
-        previewButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                // Implement preview functionality here
-                console.log('Preview clicked for:', this.closest('.book-card').querySelector('h3').textContent);
-            });
+        // Book preview functionality
+        function showPreview(bookId) {
+            previewContainer.classList.remove('hidden');
+            previewFrame.contentWindow.postMessage({
+                type: 'loadPreview',
+                bookId: bookId
+            }, '*');
+        }
+
+        // Listen for messages from preview iframe
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'closePreview') {
+                previewContainer.classList.add('hidden');
+            }
+        });
+
+        // Load initial books
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBooks();
         });
     </script>
 </body>

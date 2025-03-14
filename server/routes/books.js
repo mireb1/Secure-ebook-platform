@@ -9,7 +9,10 @@ const {
     downloadBook,
     addReview,
     getBookReviews,
-    searchBooks
+    searchBooks,
+    updateProgress,
+    saveBookmarks,
+    getBookmarks
 } = require('../controllers/books');
 
 // Apply protection middleware to all routes
@@ -37,6 +40,11 @@ router.get('/:id/reviews', getBookReviews);
 // Routes requiring valid subscription
 router.post('/:id/purchase', auth.validateSession, purchaseBook);
 router.get('/:id/download/:token', auth.validateSession, downloadBook);
+
+// Reading progress and bookmarks
+router.post('/:id/progress', auth.validateSession, updateProgress);
+router.post('/:id/bookmarks', auth.validateSession, saveBookmarks);
+router.get('/:id/bookmarks', auth.validateSession, getBookmarks);
 
 // Review routes
 router.post('/:id/reviews', reviewValidation, auth.validateSession, addReview);

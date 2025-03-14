@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' https://cdn.tailwindcss.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';">
+    <title>Tableau de bord - Mireb Commercial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-blue-600">Mireb Commercial</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
+                            <img src="https://via.placeholder.com/32" alt="Profile" class="w-8 h-8 rounded-full">
+                            <span id="userName">Chargement...</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </button>
+                        <div class="absolute right-0 w-48 mt-2 py-2 bg-white rounded-lg shadow-xl hidden group-hover:block">
+                            <a href="#profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i> Profil
+                            </a>
+                            <a href="#security" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-shield-alt mr-2"></i> Sécurité
+                            </a>
+                            <a href="#subscription" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-credit-card mr-2"></i> Abonnement
+                            </a>
+                            <hr class="my-2">
+                            <button onclick="logout()" class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <i class="fas fa-book text-blue-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Livres achetés</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="purchasedBooks">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <i class="fas fa-clock text-green-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Temps de lecture</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="readingTime">0h</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-full">
+                        <i class="fas fa-star text-purple-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Abonnement</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="subscriptionType">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-yellow-100 rounded-full">
+                        <i class="fas fa-mobile-alt text-yellow-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Appareils actifs</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="activeDevices">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Books -->
+        <section class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Ma bibliothèque</h2>
+                <a href="explore.html" class="text-blue-600 hover:text-blue-700">
+                    <i class="fas fa-plus mr-2"></i>Explorer plus
+                </a>
+            </div>
+            <div id="recentBooks" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Loading state -->
+                <div class="col-span-full text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-blue-600 text-2xl"></i>
+                    <p class="mt-2 text-gray-600">Chargement de votre bibliothèque...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reading Activity -->
+        <section class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Activité de lecture</h2>
+            <div id="activityLog" class="space-y-4">
+                <!-- Activity items will be loaded here -->
+                <div class="text-center py-4">
+                    <i class="fas fa-spinner fa-spin text-blue-600"></i>
+                    <p class="mt-2 text-gray-600">Chargement de l'activité...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Check authentication status
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'same-origin'
+                });
+                
+                if (!response.ok) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+
+                const data = await response.json();
+                return data.data;
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Create book card with progress
+        function createBookCard(book) {
+            const progress = book.progress || 0;
+            return `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="relative">
+                        <img src="${book.coverImage}" alt="${book.title}" class="w-full h-48 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                            <div class="flex items-center justify-between text-white">
+                                <span class="text-sm">${progress}% lu</span>
+                                <span class="text-sm">${new Date(book.lastAccessed).toLocaleDateString()}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                <div class="bg-blue-600 h-1.5 rounded-full" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">${book.title}</h3>
+                        <p class="text-gray-600 text-sm mb-4">Par ${book.author.name}</p>
+                        <div class="flex space-x-2">
+                            ${progress > 0 ? `
+                                <a href="/reader.html?id=${book._id}" 
+                                    class="flex-1 bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700">
+                                    Continuer
+                                </a>
+                            ` : `
+                                <a href="/reader.html?id=${book._id}" 
+                                    class="flex-1 bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700">
+                                    Commencer
+                                </a>
+                            `}
+                            <button onclick="showBookDetails('${book._id}')" 
+                                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show book details modal
+        async function showBookDetails(bookId) {
+            try {
+                const response = await fetch(`/api/books/${bookId}`, {
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des détails du livre');
+                }
+
+                const { data: book } = await response.json();
+
+                // Create and show modal
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start">
+                                <h2 class="text-2xl font-bold text-gray-800">${book.title}</h2>
+                                <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-500">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <img src="${book.coverImage}" alt="${book.title}" class="w-full rounded-lg shadow">
+                                    <div class="mt-4">
+                                        <h3 class="font-semibold text-gray-800">Progression de lecture</h3>
+                                        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                            <div class="bg-blue-600 h-2 rounded-full" 
+                                                style="width: ${book.progress || 0}%"></div>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            ${book.progress || 0}% complété
+                                        </p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800 mb-2">Détails</h3>
+                                    <dl class="space-y-2">
+                                        <div>
+                                            <dt class="text-sm text-gray-500">Auteur</dt>
+                                            <dd class="text-gray-800">${book.author.name}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm text-gray-500">Format</dt>
+                                            <dd class="text-gray-800">${book.format}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm text-gray-500">Date d'achat</dt>
+                                            <dd class="text-gray-800">
+                                                ${new Date(book.purchaseDate).toLocaleDateString()}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm text-gray-500">Dernière lecture</dt>
+                                            <dd class="text-gray-800">
+                                                ${new Date(book.lastAccessed).toLocaleDateString()}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                    <div class="mt-6">
+                                        <h3 class="font-semibold text-gray-800 mb-2">Description</h3>
+                                        <p class="text-gray-600 text-sm">${book.description}</p>
+                                    </div>
+                                    <div class="mt-6">
+                                        <a href="/reader.html?id=${book._id}" 
+                                            class="block w-full bg-blue-600 text-white text-center py-2 rounded-lg 
+                                            hover:bg-blue-700">
+                                            ${book.progress > 0 ? 'Continuer la lecture' : 'Commencer la lecture'}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            } catch (error) {
+                console.error('Show book details error:', error);
+                alert('Erreur lors du chargement des détails du livre');
+            }
+        }
+
+        // Load user data and books
+        async function loadUserData() {
+            try {
+                const user = await checkAuth();
+                if (!user) return;
+
+                // Update user name
+                document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+                
+                // Update subscription type
+                document.getElementById('subscriptionType').textContent = 
+                    user.subscription.type.charAt(0).toUpperCase() + user.subscription.type.slice(1);
+                
+                // Update purchased books count
+                document.getElementById('purchasedBooks').textContent = user.library.length;
+                
+                // Update active devices
+                document.getElementById('activeDevices').textContent = user.trustedDevices.length;
+
+                // Calculate total reading time (placeholder)
+                document.getElementById('readingTime').textContent = '2h 30m';
+
+                // Load user's books with details
+                const booksPromises = user.library.map(async (item) => {
+                    const response = await fetch(`/api/books/${item.book}`, {
+                        credentials: 'same-origin'
+                    });
+                    if (!response.ok) throw new Error('Erreur lors du chargement du livre');
+                    const { data: book } = await response.json();
+                    return {
+                        ...book,
+                        progress: item.progress,
+                        lastAccessed: item.lastAccessed,
+                        purchaseDate: item.purchaseDate
+                    };
+                });
+
+                const books = await Promise.all(booksPromises);
+                
+                // Sort books by last accessed date
+                books.sort((a, b) => new Date(b.lastAccessed) - new Date(a.lastAccessed));
+
+                // Update books display
+                const recentBooksContainer = document.getElementById('recentBooks');
+                recentBooksContainer.innerHTML = books.length ? 
+                    books.map(createBookCard).join('') :
+                    `<div class="col-span-full text-center py-8">
+                        <p class="text-gray-600">Votre bibliothèque est vide</p>
+                        <a href="/explore.html" class="mt-2 inline-block text-blue-600 hover:text-blue-700">
+                            Explorer les livres
+                        </a>
+                    </div>`;
+
+                // Update activity log
+                const activityLogContainer = document.getElementById('activityLog');
+                const activities = user.activityLog.slice(0, 5);
+                activityLogContainer.innerHTML = activities.length ?
+                    activities.map(activity => `
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas ${getActivityIcon(activity.action)} text-blue-600"></i>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-gray-800">${getActivityDescription(activity)}</p>
+                                <p class="text-sm text-gray-500">
+                                    ${new Date(activity.timestamp).toLocaleString()}
+                                </p>
+                            </div>
+                        </div>
+                    `).join('') :
+                    '<p class="text-center text-gray-600">Aucune activité récente</p>';
+            } catch (error) {
+                console.error('Load user data error:', error);
+                alert('Erreur lors du chargement des données');
+            }
+        }
+
+        // Helper function to get activity icon
+        function getActivityIcon(action) {
+            switch (action) {
+                case 'READ':
+                    return 'fa-book-reader';
+                case 'PURCHASE':
+                    return 'fa-shopping-cart';
+                case 'LOGIN':
+                    return 'fa-sign-in-alt';
+                default:
+                    return 'fa-circle';
+            }
+        }
+
+        // Helper function to get activity description
+        function getActivityDescription(activity) {
+            switch (activity.action) {
+                case 'READ':
+                    return 'Lecture d\'un livre';
+                case 'PURCHASE':
+                    return 'Achat d\'un nouveau livre';
+                case 'LOGIN':
+                    return 'Connexion au compte';
+                default:
+                    return activity.action;
+            }
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', loadUserData);
+    </script>
+</body>
+</html>
